@@ -139,10 +139,10 @@ var fire=function(dir) {
 		if (rw.key('da')) {
 			if (rw.key('la')) {
 				this.base.changeSprite('dl');
-				this.base.moveTo(272,336);
+				this.base.moveTo(283.313709,324.686291);
 			} else if (rw.key('ra')) {
 				this.base.changeSprite('dr');
-				this.base.moveTo(336,336);
+				this.base.moveTo(324.686291,324.686291);
 			} else {
 				this.base.changeSprite('d');
 				this.base.moveTo(304,336);
@@ -150,10 +150,10 @@ var fire=function(dir) {
 		} else if (rw.key('ua')) {
 			if (rw.key('la')) {
 				this.base.changeSprite('ul');
-				this.base.moveTo(272,272);
+				this.base.moveTo(283.313709,283.313709);
 			} else if (rw.key('ra')) {
 				this.base.changeSprite('ur');
-				this.base.moveTo(336,272);
+				this.base.moveTo(324.686291,283.313709);
 			} else {
 				this.base.changeSprite('u');
 				this.base.moveTo(304,272);
