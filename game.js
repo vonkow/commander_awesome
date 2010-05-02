@@ -93,7 +93,6 @@ var commander = function() {
 		} else {
 			this.count=10;
 			(this.ani==1) ? this.ani=2 : this.ani=1;
-			//this.base.changeSprite(this.dir+this.ani+this.wep);
 		};
 		this.base.changeSprite(this.dir+this.ani+this.wep);
 	};
@@ -108,7 +107,6 @@ var commander = function() {
 		this.dir='r' :
 		rw.key('da') ? this.dir='d' : 
 		rw.key('ua') ? this.dir='u' : this.dir=this.dir;
-		//this.base.changeSprite(this.dir+this.ani+this.dir.wep);
 	};
 	this.hitMap = [
 		['commander',1,1,31,31],
