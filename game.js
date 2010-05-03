@@ -1,3 +1,11 @@
+var lagTimer = function() {
+	this.base = new rw.ent('lag', '','','',150,20);
+	this.update = function() {
+		this.base.detach();
+		this.base.attach(document.createTextNode('Lag: '+rw.getLag()+'(ms)'));
+	}
+}
+
 var gameStats=new function() {
 	this.loot=0;
 	this.lives=3;
@@ -20,20 +28,24 @@ var commander = function() {
 	this.count = 10;
 	this.lasTimer=0;
 	this.swapTimer=0;
+	this.move=false;
 	this.update = function() {
+		this.move=false;
 		// Movement
 		if (rw.key('ua')) {
 			(rw.key('ctr')) ? rw.rules['map'].pos(0,this.stats.run) : rw.rules['map'].pos(0,this.stats.walk);
+			this.move=true;
 		} else if (rw.key('da')) {
 			(rw.key('ctr')) ? rw.rules['map'].pos(0,-this.stats.run) : rw.rules['map'].pos(0,-this.stats.walk);
+			this.move=true;
 		}
 		if (rw.key('la')) {
 			(rw.key('ctr')) ? rw.rules['map'].pos(this.stats.run,0) : rw.rules['map'].pos(this.stats.walk,0);
+			this.move=true;
 		} else if (rw.key('ra')) {
 			(rw.key('ctr')) ? rw.rules['map'].pos(-this.stats.run,0) : rw.rules['map'].pos(-this.stats.walk,0);
-		} else {
-			rw.rules['map'].pos(0,0);
-		}
+			this.move=true;
+		} 
 		// Weapon Swapping
 		if (this.swapTimer>0) this.swapTimer--;
 		if(rw.key('s')) {
@@ -44,30 +56,35 @@ var commander = function() {
 						this.wep='f';
 						break;
 					case 'f':
+						this.wep='m';
+						break;
+					case 'm':
+						this.wep='g';
+						break;
+					case 'g':
 						this.wep='l';
 						break;
 				}
-				//this.base.changeSprite(this.dir+this.ani+this.wep);
 			}
 		}
 		// Weapon Fire
 		if (rw.key('z')) {
 			if (this.dir=='d') {
-				var las=['v',[0,5],0,30];
+				var las=['v',[0,5],0,32];
 			} else if (this.dir=='u') {
-				var las=['v',[0,-5],0,-30];
+				var las=['v',[0,-5],0,-32];
 			} else if (this.dir=='l') {
-				var las=['h',[-5,0],-30,0];
+				var las=['h',[-5,0],-32,0];
 			} else if (this.dir=='r') {
-				var las=['h',[5,0],30,0];
+				var las=['h',[5,0],32,0];
 			} else if (this.dir=='dl') {
-				var las=['dlur',[-5,5],-30,30];
+				var las=['dlur',[-5,5],-20.6862915,20.6862915];
 			} else if (this.dir=='dr') {
-				var las=['uldr',[5,5],30,30];
+				var las=['uldr',[5,5],20.6862915,20.6862915];
 			} else if (this.dir=='ul') {
-				var las=['uldr',[-5,-5],-30,-30];
+				var las=['uldr',[-5,-5],-20.6862915,-20.6862915];
 			} else if (this.dir=='ur') {
-				var las=['dlur',[5,-5],30,-30];
+				var las=['dlur',[5,-5],20.6862915,-20.6862915];
 			}
 			if (this.wep=='l') {
 				if (this.lasTimer==0) {
@@ -88,11 +105,13 @@ var commander = function() {
 		} else {
 			rw.rules['stat'].fire=false;
 		};
-		if (this.count>0) {
-			this.count--;
-		} else {
-			this.count=10;
-			(this.ani==1) ? this.ani=2 : this.ani=1;
+		if (this.move) {
+			if (this.count>0) {
+				this.count--;
+			} else {
+				this.count=10;
+				(this.ani==1) ? this.ani=2 : this.ani=1;
+			};
 		};
 		this.base.changeSprite(this.dir+this.ani+this.wep);
 	};
@@ -190,7 +209,7 @@ var laser=function(img,move) {
 	};
 	this.hitMap=[['laser',11,11,21,21]];
 	this.gotHit=function(by) {
-		if ((by=='blob')||(by=='wallT')||(by=='wallB')||(by=='wallL')||(by=='wallR')) {
+		if ((by=='blob')||(by=='baldo')||(by=='wallT')||(by=='wallB')||(by=='wallL')||(by=='wallR')) {
 			this.base.hide();
 			return false;
 		}
@@ -209,6 +228,31 @@ var wall=function(x,y) {
 		['wallL',0,1,1,y-1,x/2,y/2],
 		['wallR',x-1,1,x,y-1,x/2,y/2]
 	];
+}
+
+var baldoCount=0;
+var baldo=function(dir) {
+	this.base=new rw.ent('baldo'+baldoCount++,'villans/baldo',dir+'1','png',32,32);
+	this.dir=dir;
+	this.aniCount=10;
+	this.ani=1;
+	this.update=function() {
+		if (this.aniCount>0) {
+			this.aniCount--;
+		} else {
+			this.aniCount=10;
+			(this.ani==1) ? this.ani++ : this.ani--;
+			this.base.changeSprite(this.dir+this.ani);
+		}
+		this.base.move(rw.rules['map'].pX,rw.rules['map'].pY);
+	}
+	this.hitMap=[['baldo',0,0,32,32]];
+	this.gotHit=function(by) {
+		if ((by=='laser')||(by=='fire')) {
+			this.base.hide();
+			return false;
+		}
+	}
 }
 
 var blobCount=0;
@@ -325,6 +369,8 @@ var world1=function() {
 		.base.display('',384,384,384).end()
 	.newEnt(new wall(64,64))
 		.base.display('',448,320,320).end()
+	.newEnt(new baldo('l'))
+		.base.display('l1',150,150,150).end()
 }
 
 var startGame=function() {
@@ -334,13 +380,19 @@ var startGame=function() {
 		'd1l','d2l','u1l','u2l','l1l','l2l','r1l','r2l',
 		'dl1l','dl2l','ul1l','ul2l','dr1l','dr2l','ur1l','ur2l',
 		'd1f','d2f','u1f','u2f','l1f','l2f','r1f','r2f',
-		'dl1f','dl2f','ul1f','ul2f','dr1f','dr2f','ur1f','ur2f'
+		'dl1f','dl2f','ul1f','ul2f','dr1f','dr2f','ur1f','ur2f',
+		'd1m','d2m','u1m','u2m','l1m','l2m','r1m','r2m',
+		'dl1m','dl2m','ul1m','ul2m','dr1m','dr2m','ur1m','ur2m',
+		'd1g','d2g','u1g','u2g','l1g','l2g','r1g','r2g',
+		'dl1g','dl2g','ul1g','ul2g','dr1g','dr2g','ur1g','ur2g'
 	])
 	.using('weapons/laser','png',['v','h','dlur','uldr'])
 	.using('weapons/fire','png',['d','u','l','r','dl','dr','ul','ur'])
 	.using('items/loot','png',['loot','redGem','blueGem','goldGem'])
 	.using('villans/blob','png',['l1','l2','r1','r2'])
+	.using('villans/baldo','png',['u1','u2','d1','d2','l1','l2','r1','r2'])
 	.setFPS(40)
+	.newEnt(new lagTimer()).base.display('blank',0,0,0).end()
 	.newMap('grass','grass','png',640,640).display().end()
 	.func(world1())
 	.start();
