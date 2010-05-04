@@ -31,8 +31,10 @@ var commander = function() {
 	this.misTimer=0;
 	this.swapTimer=0;
 	this.move=false;
+	this.beenHit=false;
 	this.update = function() {
 		this.move=false;
+		this.beenHit=false;
 		// Movement
 		if (rw.key('ua')) {
 			rw.rules['map'].pos(0,this.stats.walk);
@@ -154,8 +156,14 @@ var commander = function() {
 		['comR',31,0,32,32]
 	];
 	this.gotHit = function(by,at) {
-		if ((by=='blob')||(by=='baldo')) {
-			gameStats.hp--;
+		if (this.beenHit==false) {
+			if ((by=='blob')||(by=='baldo')) {
+				gameStats.hp--;
+				this.beenHit=true;
+			} else if (by=='laser') {
+				gameStats.hp-=10;
+				this.beenHit=true;
+			}
 		}
 		if ((at=='comT')&&(by=='wallB')) {
 			rw.rules['map'].pos(0,-1);
@@ -231,7 +239,7 @@ var laser=function(img,move) {
 	};
 	this.hitMap=[['laser',11,11,21,21]];
 	this.gotHit=function(by) {
-		if ((by=='blob')||(by=='baldo')||(by=='wallT')||(by=='wallB')||(by=='wallL')||(by=='wallR')) {
+		if ((by=='commander')||(by=='blob')||(by=='baldo')||(by=='wallT')||(by=='wallB')||(by=='wallL')||(by=='wallR')) {
 			this.base.hide();
 			return false;
 		};
@@ -300,14 +308,87 @@ var baldo=function(dir) {
 	this.aniCount=10;
 	this.ani=1;
 	this.hp=5;
+	this.wepCount=0;
 	this.update=function() {
+		// Movement
+		switch (this.dir) {
+			case 'l':
+				if (this.base.posX1()>304) {
+					this.base.move(-1,0);
+				} else {
+					if (this.base.posY1()>304) {
+						this.dir='u';
+					} else {
+						this.dir='d';
+					}
+				}
+				break;
+			case 'r':
+				if (this.base.posX1()<304) {
+					this.base.move(1,0);
+				} else {
+					if (this.base.posY1()>304) {
+						this.dir='u';
+					} else {
+						this.dir='d';
+					}
+				}
+				break;
+			case 'd':
+				if (this.base.posY1()<304) {
+					this.base.move(0,1);
+				} else {
+					if (this.base.posX1()<304) {
+						this.dir='r';
+					} else {
+						this.dir='l';
+					}
+				}
+				break;
+			case 'u':
+				if (this.base.posY1()>304) {
+					this.base.move(0,-1);
+				} else {
+					if (this.base.posX1()<304) {
+						this.dir='r';
+					} else {
+						this.dir='l';
+					}
+				}
+				break;
+		}
+		// Weapon Fire
+		if (this.wepCount==0) {
+			if ((this.base.posX1()==304)||(this.base.posY1()==304)) {
+				switch (this.dir) {
+					case 'd':
+						var wep=[[0,33],[0,5],'v'];
+						break;
+					case 'u':
+						var wep=[[0,-33],[0,-5],'v'];
+						break;
+					case 'l':
+						var wep=[[-33,0],[-5,0],'h'];
+						break;
+					case 'r':
+						var wep=[[33,0],[5,0],'h'];
+						break;
+				}
+				this.wepCount=40;
+				rw.newEnt(new laser(wep[2],wep[1]))
+					.base.display(wep[2],this.base.posX1()+wep[0][0],this.base.posY1()+wep[0][1],this.base.posY1()+wep[0][1]).end();
+			}
+		} else {
+			this.wepCount--;
+		}
+		// Animation and display
 		if (this.aniCount>0) {
 			this.aniCount--;
 		} else {
 			this.aniCount=10;
 			(this.ani==1) ? this.ani++ : this.ani--;
-			this.base.changeSprite(this.dir+this.ani);
 		}
+		this.base.changeSprite(this.dir+this.ani);
 		this.base.move(rw.rules['map'].pX,rw.rules['map'].pY);
 	}
 	this.hitMap=[['baldo',0,0,32,32]];
@@ -717,6 +798,8 @@ var world1=function() {
 		.base.display('',448,320,320).end()
 	.newEnt(new baldo('l'))
 		.base.display('l1',150,150,150).end()
+	.newEnt(new baldo('l'))
+		.base.display('l1',490,490,490).end()
 }
 
 var startGame=function() {
@@ -741,7 +824,7 @@ var startGame=function() {
 	.using('items/loot','png',['loot','redGem','blueGem','goldGem'])
 	.using('villans/blob','png',['l1','l2','r1','r2'])
 	.using('villans/baldo','png',['u1','u2','d1','d2','l1','l2','r1','r2'])
-	.setFPS(80)
+	.setFPS(60)
 	.newEnt(new lagTimer()).base.display('blank',0,0,0).end()
 	.newMap('grass','grass','png',640,640).display().end()
 	.func(world1())
