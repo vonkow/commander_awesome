@@ -8,6 +8,7 @@ var lagTimer = function() {
 
 var gameStats=new function() {
 	this.loot=0;
+	this.hp=100;
 	this.lives=3;
 	this.score=0;
 	this.weps = {
@@ -153,9 +154,8 @@ var commander = function() {
 		['comR',31,0,32,32]
 	];
 	this.gotHit = function(by,at) {
-		if (by=='blob') {
-			this.base.hide();
-			return false;
+		if ((by=='blob')||(by=='baldo')) {
+			gameStats.hp--;
 		}
 		if ((at=='comT')&&(by=='wallB')) {
 			rw.rules['map'].pos(0,-1);
@@ -165,6 +165,10 @@ var commander = function() {
 			rw.rules['map'].pos(-1,0);
 		} else if ((at=='comR')&&(by=='wallL')) {
 			rw.rules['map'].pos(1,0);
+		}
+		if (gameStats.hp<=0) {
+			this.base.hide();
+			return false;
 		}
 	};
 };
@@ -412,6 +416,73 @@ var store=function() {
 	};
 };
 
+var statBar=function() {
+	this.base=new rw.ent('statbar','bar','bar','png',640,64);
+	this.update=function(){};
+}
+
+var statNumCount=0;
+var statNum=function(stat,pos) {
+	this.base=new rw.ent('statNum'+statNumCount++,'font','0','png',32,32);
+	this.stat=stat;
+	this.pos=pos;
+	this.update=function() {
+		this.base.changeSprite(rw.rules['statRule'][this.stat][this.pos]);
+	}
+}
+
+var statRule=function() {
+	this.base=new rw.rule(true);
+	this.hp='000';
+	this.las='000';
+	this.fire='000';
+	this.mis='00';
+	this.loot='0000';
+	this.rule=function() {
+		var hpA=gameStats.hp.toString();
+		if (gameStats.hp<0) hpA='0';
+		if (hpA.length==1) {
+			this.hp='00'+hpA;
+		} else if (hpA.length==2) {
+			this.hp='0'+hpA;
+		} else {
+			this.hp=hpA;
+		}
+		var lootA=gameStats.loot.toString();
+		if (lootA.length==1) {
+			this.loot='000'+lootA;
+		} else if (lootA.length==2) {
+			this.loot='00'+lootA;
+		} else if (lootA.length==3) {
+			this.loot='0'+lootA;
+		} else {
+			this.loot=lootA;
+		}
+		var lA=gameStats.weps.las[1].toString();
+		if (lA.length==1) {
+			this.las='00'+lA;
+		} else if (lA.length==2) {
+			this.las='0'+lA;
+		} else {
+			this.las=lA;
+		}
+		var fA=gameStats.weps.fire[1].toString();
+		if (fA.length==1) {
+			this.fire='00'+fA;
+		} else if (fA.length==2) {
+			this.fire='0'+fA;
+		} else {
+			this.fire=fA;
+		}
+		var mA=gameStats.weps.mis[1].toString();
+		if (mA.length==1) {
+			this.mis='0'+mA;
+		} else {
+			this.mis=mA;
+		}
+	}
+}
+
 var mapScroll=function() {
 	this.base=new rw.rule(true);
 	this.tX=0;
@@ -451,67 +522,137 @@ var stat=function() {
 var enterStore=function() {
 	this.base=new rw.rule(true);
 	this.instore=false;
+	this.atEnd=function() {
+		rw.saveState('main').wipeAll();
+		makeStore();
+	}
 	this.rule=function() {
 		if (this.instore) {
 			this.instore=false;
-			rw.saveState('main').wipeAll();
-			makeStore();
+			rw.atEnd(this.atEnd);
 		};
 	};
 };
 
-var storeIn=function() {
-	this.base=new rw.ent('store','','','',640,640);
-	this.curState=0;
-	this.keyDelay=0;
-	var me=this;
-	this.state=[
-		[
-			document.createTextNode('Hola!'),
-			function() {
-				me.base.detach().attach(me.state[me.curState][0]);
-				if (me.keyDelay==0) {
-					if (rw.key('z')) {
-						me.curState=1;
-						me.keyDelay=10;
-					} else if (rw.key('x')) {
-						rw.rules['storeLeave'].leaving=true;
-					}
-				}
+var tryBuy=function(item) {
+	switch (item) {
+		case 'las':
+			if ((gameStats.weps.las[1]<990)&&(gameStats.loot>=100)) {
+				gameStats.loot-=100;
+				gameStats.weps.las[1]+=10;
 			}
-		],[
-			document.createElement('div').appendChild(document.createTextNode(
-				'Laser: '+gameStats.weps.las[1]+' Shots Remaining : 20 shots for $25.\n'+
-				'Fire: '+gameStats.weps.fire[1]+' Shots Remaining : 100 shots for $25.\n'+
-				'Missles: '+gameStats.weps.mis[1]+' Remaining : 5 missles for $25\n'
-			)),
-			function() {
-				me.base.detach().attach(me.state[me.curState][0]);
-				if (me.keyDelay==0) {
-					if (rw.key('z')) {
-						me.curState=1;
-						me.keyDelay=10;
-					} else if (rw.key('x')) {
-						me.curState=0;
-						me.keyDelay=10;
-					}
-				}
+			break;
+		case 'fire':
+			if ((gameStats.weps.fire[1]<950)&&(gameStats.loot>=50)) {
+				gameStats.loot-=50;
+				gameStats.weps.fire[1]+=50;
 			}
-		]
-	];
-	this.update=function() {
-		if (this.keyDelay>0) {
-			this.keyDelay--;
-		} else {
-		}
-		this.state[this.curState][1]();
+			break;
+		case 'mis':
+			if ((gameStats.weps.mis[1]<95)&&(gameStats.loot>=200)) {
+				gameStats.loot-=200;
+				gameStats.weps.mis[1]+=5;
+			}
+			break;
 	}
 }
 
-var storeLeave=function() {
+var storeIn=function() {
+	this.base=new rw.ent('storeIn','store','inside','png',640,640);
+	this.update=function() {
+	};
+}
+
+var storeArrow=function() {
+	this.base=new rw.ent('storeArrow','font','raro','png',32,32);
+	this.pos=0;
+	this.keyDelay=0;
+	this.update=function() {
+		if (this.keyDelay==0) {
+			if (rw.key('z')) {
+				if (this.pos==0) {
+					tryBuy('las');
+				} else if (this.pos==1) {
+					tryBuy('fire');
+				} else if (this.pos==2) {
+					tryBuy('mis');
+				} else if (this.pos==3) {
+				}
+				this.keyDelay=10;
+			} else if (rw.key('x')) {
+				if (this.pos==4) {
+					rw.rules['storeRule'].leaving=true;
+				}
+			} else if (rw.key('da')) {
+				if (this.pos<4) {
+					this.pos++;
+					this.keyDelay=10;
+					this.base.moveTo(32,192+(this.pos*64));
+				}
+			} else if (rw.key('ua')) {
+				if (this.pos>0) {
+					this.pos--;
+					this.keyDelay=10;
+					this.base.moveTo(32,192+(this.pos*64));
+				}
+			}
+		} else {
+			this.keyDelay--;
+		}
+	};
+};
+
+var storeQtyCount=0;
+var storeQty=function(type,ord) {
+	this.base=new rw.ent('storeQty'+storeQtyCount++,'font','0','png',32,32);
+	this.type=type;
+	this.ord=ord;
+	this.update=function() {
+		this.base.changeSprite(rw.rules['storeRule'][this.type+'Am'][this.ord]);
+	}
+}
+
+var storeRule=function() {
 	this.base=new rw.rule(true);
 	this.leaving=false;
+	this.lootAm='0000';
+	this.lasAm='000';
+	this.fireAm='000';
+	this.misAm='000';
+	this.loot=gameStats.loot;
 	this.rule=function() {
+		var lootA = gameStats.loot.toString();
+		if (lootA.length==1) {
+			this.lootAm='000'+lootA;
+		} else if (lootA.length==2) {
+			this.lootAm='00'+lootA;
+		} else if (lootA.length==3) {
+			this.lootAm='0'+lootA;
+		} else {
+			this.lootAm=lootA;
+		}
+		var lA = gameStats.weps.las[1].toString();
+		if (lA.length==1) {
+			this.lasAm='00'+lA;
+		} else if (lA.length==2) {
+			this.lasAm='0'+lA;
+		} else {
+			this.lasAm=lA;
+		}
+		var fA = gameStats.weps.fire[1].toString();
+		if (fA.length==1) {
+			this.fireAm='00'+fA;
+		} else if (fA.length==2) {
+			this.fireAm='0'+fA;
+		} else {
+			this.fireAm=fA;
+		}
+		var mA = gameStats.weps.mis[1].toString();
+		if (mA.length==1) {
+			this.misAm='0'+mA;
+		} else {
+			this.misAm=mA;
+		}
 		if (this.leaving) {
 			rw.wipeAll().loadState('main');
 		};
@@ -519,15 +660,45 @@ var storeLeave=function() {
 }
 
 var makeStore=function() {
-	rw.newEnt(new storeIn()).base.display('',0,0,0).end()
-	.newRule('storeLeave',new storeLeave());
+	rw.newRule('storeRule',new storeRule())
+	.newEnt(new storeIn()).base.display('inside',0,0,0).end()
+	.newEnt(new storeArrow()).base.display('raro',32,192,192).end()
+	.newEnt(new storeQty('las','0')).base.display('0',256,192,192).end()
+	.newEnt(new storeQty('las','1')).base.display('0',288,192,192).end()
+	.newEnt(new storeQty('las','2')).base.display('0',320,192,192).end()
+	.newEnt(new storeQty('fire','0')).base.display('0',256,256,256).end()
+	.newEnt(new storeQty('fire','1')).base.display('0',288,256,256).end()
+	.newEnt(new storeQty('fire','2')).base.display('0',320,256,256).end()
+	.newEnt(new storeQty('mis','0')).base.display('0',288,320,320).end()
+	.newEnt(new storeQty('mis','1')).base.display('0',320,320,320).end()
+	.newEnt(new storeQty('loot','0')).base.display('0',256,544,544).end()
+	.newEnt(new storeQty('loot','1')).base.display('0',288,544,544).end()
+	.newEnt(new storeQty('loot','2')).base.display('0',320,544,544).end()
+	.newEnt(new storeQty('loot','3')).base.display('0',352,544,544).end()
 };
 
 var world1=function() {
 	rw.newMap('grass','grass','png',640,640).display().end()
 	.newRule('map', new mapScroll())
 	.newRule('stat', new stat())
+	.newRule('statRule', new statRule())
 	.newRule('enterStore', new enterStore())
+	.newEnt(new statBar()).base.display('bar',0,576,640).end()
+	.newEnt(new statNum('hp',0)).base.display('0',32,608,641).end()
+	.newEnt(new statNum('hp',1)).base.display('0',64,608,641).end()
+	.newEnt(new statNum('hp',2)).base.display('0',96,608,641).end()
+	.newEnt(new statNum('las',0)).base.display('0',160,608,641).end()
+	.newEnt(new statNum('las',1)).base.display('0',192,608,641).end()
+	.newEnt(new statNum('las',2)).base.display('0',224,608,641).end()
+	.newEnt(new statNum('fire',0)).base.display('0',288,608,641).end()
+	.newEnt(new statNum('fire',1)).base.display('0',320,608,641).end()
+	.newEnt(new statNum('fire',2)).base.display('0',352,608,641).end()
+	.newEnt(new statNum('mis',0)).base.display('0',416,608,641).end()
+	.newEnt(new statNum('mis',1)).base.display('0',448,608,641).end()
+	.newEnt(new statNum('loot',0)).base.display('0',512,608,641).end()
+	.newEnt(new statNum('loot',1)).base.display('0',544,608,641).end()
+	.newEnt(new statNum('loot',2)).base.display('0',576,608,641).end()
+	.newEnt(new statNum('loot',3)).base.display('0',608,608,641).end()
 	.newEnt(new commander())
 		.base.display('d1l',304,304,304).end()
 	.newEnt(new store())
@@ -570,7 +741,7 @@ var startGame=function() {
 	.using('items/loot','png',['loot','redGem','blueGem','goldGem'])
 	.using('villans/blob','png',['l1','l2','r1','r2'])
 	.using('villans/baldo','png',['u1','u2','d1','d2','l1','l2','r1','r2'])
-	.setFPS(40)
+	.setFPS(80)
 	.newEnt(new lagTimer()).base.display('blank',0,0,0).end()
 	.newMap('grass','grass','png',640,640).display().end()
 	.func(world1())
