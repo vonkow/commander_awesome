@@ -83,13 +83,13 @@ var commander = function() {
 			} else if (this.dir=='r') {
 				var las=['h',[5,0],32,0];
 			} else if (this.dir=='dl') {
-				var las=['dlur',[-5,5],-20.6862915,20.6862915];
+				var las=['dlur',[-5,5],-21,21];
 			} else if (this.dir=='dr') {
-				var las=['uldr',[5,5],20.6862915,20.6862915];
+				var las=['uldr',[5,5],21,21];
 			} else if (this.dir=='ul') {
-				var las=['uldr',[-5,-5],-20.6862915,-20.6862915];
+				var las=['uldr',[-5,-5],-21,-21];
 			} else if (this.dir=='ur') {
-				var las=['dlur',[5,-5],20.6862915,-20.6862915];
+				var las=['dlur',[5,-5],21,-21];
 			}
 			if (this.wep=='l') {
 				if ((gameStats.weps.las[0])&&(gameStats.weps.las[1]>0)) {
@@ -314,7 +314,7 @@ var baldo=function(dir) {
 		switch (this.dir) {
 			case 'l':
 				if (this.base.posX1()>304) {
-					this.base.move(-1,0);
+					this.base.move(-0.5,0);
 				} else {
 					if (this.base.posY1()>304) {
 						this.dir='u';
@@ -325,7 +325,7 @@ var baldo=function(dir) {
 				break;
 			case 'r':
 				if (this.base.posX1()<304) {
-					this.base.move(1,0);
+					this.base.move(0.5,0);
 				} else {
 					if (this.base.posY1()>304) {
 						this.dir='u';
@@ -336,7 +336,7 @@ var baldo=function(dir) {
 				break;
 			case 'd':
 				if (this.base.posY1()<304) {
-					this.base.move(0,1);
+					this.base.move(0,0.5);
 				} else {
 					if (this.base.posX1()<304) {
 						this.dir='r';
@@ -347,7 +347,7 @@ var baldo=function(dir) {
 				break;
 			case 'u':
 				if (this.base.posY1()>304) {
-					this.base.move(0,-1);
+					this.base.move(0,-0.5);
 				} else {
 					if (this.base.posX1()<304) {
 						this.dir='r';
@@ -362,16 +362,16 @@ var baldo=function(dir) {
 			if ((this.base.posX1()==304)||(this.base.posY1()==304)) {
 				switch (this.dir) {
 					case 'd':
-						var wep=[[0,33],[0,5],'v'];
+						var wep=[[0,33],[0,2.5],'v'];
 						break;
 					case 'u':
-						var wep=[[0,-33],[0,-5],'v'];
+						var wep=[[0,-33],[0,-2.5],'v'];
 						break;
 					case 'l':
-						var wep=[[-33,0],[-5,0],'h'];
+						var wep=[[-33,0],[-2.5,0],'h'];
 						break;
 					case 'r':
-						var wep=[[33,0],[5,0],'h'];
+						var wep=[[33,0],[2.5,0],'h'];
 						break;
 				}
 				this.wepCount=40;
@@ -798,6 +798,10 @@ var world1=function() {
 		.base.display('',448,320,320).end()
 	.newEnt(new baldo('l'))
 		.base.display('l1',150,150,150).end()
+	.newEnt(new baldo('l'))
+		.base.display('l1',150,490,490).end()
+	.newEnt(new baldo('l'))
+		.base.display('l1',490,150,150).end()
 	.newEnt(new baldo('l'))
 		.base.display('l1',490,490,490).end()
 }
