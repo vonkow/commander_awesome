@@ -136,10 +136,10 @@ var commander = function() {
 		rw.key('ua') ? this.dir='u' : this.dir=this.dir;
 	};
 	this.hitMap = [
-		['comT',0,0,32,1],
-		['comB',0,31,32,32],
-		['comL',0,0,1,32],
-		['comR',31,0,32,32]
+		['comT',1,1,31,2],
+		['comB',1,30,31,31],
+		['comL',1,1,2,31],
+		['comR',30,1,31,31]
 	];
 	this.gotHit = function(by,at) {
 		if ((at=='comT')&&(by=='wallB')) {

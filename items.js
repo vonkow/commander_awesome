@@ -2,7 +2,12 @@ var wallCount=0;
 var wall=function(x,y) {
 	this.base=new rw.ent('wall'+wallCount++,'','','',x,y);
 	this.update=function(){
-		this.base.move(rw.rules['map'].pX,rw.rules['map'].pY);
+		scrollEnt(this);
+		hideMe(this);
+	};
+	this.inactive=function() {
+		scrollEnt(this);
+		showMe(this);
 	};
 	this.hitMap=[
 		['wallT',1,0,x-1,1,x/2,y/2],
@@ -32,8 +37,13 @@ var loot=function() {
 			this.base.hide();
 			return false;
 		};
-		this.base.move(rw.rules['map'].pX,rw.rules['map'].pY);
+		scrollEnt(this);
+		hideMe(this);
 	};
+	this.inactive=function() {
+		scrollEnt(this);
+		showMe(this);
+	}
 	this.hitMap=[['loot',8,8,16,16]];
 	this.gotHit=function(by) {
 		if (by.slice(0,by.length-1)=='com') {
@@ -49,7 +59,12 @@ var storeCounter=0;
 var store=function() {
 	this.base=new rw.ent('store'+storeCounter++,'store','d','png',32,32);
 	this.update=function() {
-		this.base.move(rw.rules['map'].pX,rw.rules['map'].pY);
+		scrollEnt(this);
+		hideMe(this);
+	};
+	this.inactive=function() {
+		scrollEnt(this);
+		showMe(this);
 	};
 	this.hitMap=[['store',-32,-32,64,64]];
 	this.gotHit=function(by) {

@@ -1,4 +1,35 @@
 // Villan Update Functions
+
+var hideMe=function(me) {
+	var hide=false;
+	if (me.base.posX1()>640) {
+		hide=true;
+	} else if (me.base.posX2()<0) {
+		hide=true;
+	} else if (me.base.posY1()>640) {
+		hide=true;
+	} else if (me.base.posY2()<0) {
+		hide=true;
+	};
+	if (hide) me.base.hide();
+}
+
+var showMe=function(me) {
+	if ((me.base.posX1()<640)&&(me.base.posX1()>0)) {
+		if ((me.base.posY1()<640)&&(me.base.posY1()>0)) {
+			me.base.display(me.base.baseSprite,me.base.posX1(),me.base.posY1(),me.base.posY1());
+		} else if ((me.base.posY2()<640)&&(me.base.posY2()>0)) {
+			me.base.display(me.base.baseSprite,me.base.posX1(),me.base.posY1(),me.base.posY1());
+		}
+	} else if ((me.base.posX2()<640)&&(me.base.posX2()>0)) {
+		if ((me.base.posY1()<640)&&(me.base.posY1()>0)) {
+			me.base.display(me.base.baseSprite,me.base.posX1(),me.base.posY1(),me.base.posY1());
+		} else if ((me.base.posY2()<640)&&(me.base.posY2()>0)) {
+			me.base.display(me.base.baseSprite,me.base.posX1(),me.base.posY1(),me.base.posY1());
+		}
+	}
+}
+
 var scrollEnt=function(me) {
 	me.base.move(rw.rules['map'].pX,rw.rules['map'].pY);
 };
@@ -131,7 +162,7 @@ var villanHit=function(me,by,at,chance) {
 			return false;
 		};
 	};
-
+	return true;
 };
 
 // Villans
@@ -155,7 +186,12 @@ var baldo=function(dir) {
 		};
 		scrollEnt(this);
 		this.base.changeSprite(this.dir+this.ani);
-	}
+		hideMe(this);
+	};
+	this.inactive=function() {
+		scrollEnt(this);
+		showMe(this);
+	};
 	this.hitMap=[
 		['baldoB',0,31,32,32],
 		['baldoT',0,0,32,1],
@@ -188,6 +224,11 @@ var shades=function(dir) {
 		};
 		scrollEnt(this);
 		this.base.changeSprite(this.dir+this.ani);
+		hideMe(this);
+	};
+	this.inactive=function() {
+		scrollEnt(this);
+		showMe(this);
 	};
 	this.hitMap=[
 		['shadesB',0,31,32,32],
@@ -224,7 +265,12 @@ var blob=function(dir) {
 		this.base.changeSprite(this.dir+this.ani);
 		(this.dir=='r') ? this.base.move(1,0) : this.base.move(-1,0);
 		scrollEnt(this);
+		hideMe(this);
 	};
+	this.inactive=function() {
+		scrollEnt(this);
+		showMe(this);
+	}
 	this.hitMap=[
 		['blobT',0,6,32,7],
 		['blobB',0,25,32,26],

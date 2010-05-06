@@ -31,7 +31,10 @@ var mapScroll=function() {
 	this.rule=function() {
 		this.pX=this.tX;
 		this.pY=this.tY;
-		rw.maps['grass'].move(this.pX,this.pY);
+		for (map in rw.maps) {
+			rw.maps[map].move(this.pX,this.pY);
+		}
+		//rw.maps['grass'].move(this.pX,this.pY);
 		this.gX+=this.pX;
 		this.gY+=this.pY;
 		this.tX=0;
@@ -64,7 +67,6 @@ var startGame=function() {
 	.using('villans/shades','png',['u1','u2','d1','d2','l1','l2','r1','r2'])
 	.setFPS(60)
 	.newEnt(new lagTimer()).base.display('blank',0,0,0).end()
-	.newMap('grass','grass','png',640,640).display().end()
 	.func(world1())
 	.start();
 };
