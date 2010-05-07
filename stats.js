@@ -76,9 +76,16 @@ var statRule=function() {
 var makeStatBar=function() {
 	rw.newEnt(new function() {
 		this.base=new rw.ent('statbar','','','',640,25);
+		this.markUp=function() {
+			var div=document.createElement('div');
+			div.style.width='100%';
+			div.style.height='100%';
+			div.style.backgroundColor='white';
+			div.appendChild(document.createTextNode('Hp: '+gameStats.hp+' Laser: '+gameStats.weps.las[1]+' Fire: '+gameStats.weps.fire[1]+' Missles: '+gameStats.weps.mis[1]+' Loot: '+gameStats.loot));
+			return div;
+		};
 		this.update=function() {
-			this.base.detach().attach(
-				document.createTextNode('Hp: '+gameStats.hp+' Laser: '+gameStats.weps.las+' Fire: '+gameStats.weps.fire+' Missles: '+gameStats.weps.mis+' Loot: '+gameStats.loot));
+			this.base.detach().attach(this.markUp());
 		}
 	}).base.display('',0,615).end();
 }

@@ -155,7 +155,7 @@ var commander = function() {
 				switch(by){
 					case 'shot':
 						gameStats.hp-=10;
-						this.hit=60;
+						this.hit=30;
 						break;
 					default:
 						switch(by.slice(0,by.length-1)) {
@@ -163,7 +163,7 @@ var commander = function() {
 							case 'baldo':
 							case 'shades':
 								gameStats.hp-=10;
-								this.hit=60;
+								this.hit=30;
 								break;
 						};
 				};

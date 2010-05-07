@@ -19,17 +19,32 @@ var wall=function(x,y) {
 
 var dropRandom=function(me,chance) {
 	if (Math.random()<=chance) {
-		rw.newEnt(new loot())
-			.base.display('loot',me.base.posX1(),me.base.posY1(),me.base.posY1());
+		if (Math.random()>0.25) {
+			rw.newEnt(new loot('loot'))
+				.base.display('loot',me.base.posX1(),me.base.posY1(),me.base.posY1());
+		} else {
+			rw.newEnt(new loot('redGem'))
+				.base.display('redGem',me.base.posX1(),me.base.posY1(),me.base.posY1());
+		};
 	};
 };
 
 // Loot
 var lootCounter=0;
-var loot=function() {
-	this.base=new rw.ent('loot'+lootCounter++,'items/loot','loot','png',32,32);
+var loot=function(type) {
+	switch (type) {
+		case 'loot':
+			var lootType='loot';
+			var value=100;
+			break;
+		case 'redGem':
+			var lootType='redGem';
+			var value=250;
+			break;
+	};
+	this.base=new rw.ent('loot'+lootCounter++,'items/loot',lootType,'png',32,32);
 	this.counter=0;
-	this.loot=100;
+	this.loot=value;
 	this.update=function() {
 		if (this.counter<200) {
 			this.counter++;

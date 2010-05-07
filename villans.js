@@ -193,10 +193,10 @@ var baldo=function(dir) {
 		showMe(this);
 	};
 	this.hitMap=[
-		['baldoB',0,31,32,32],
-		['baldoT',0,0,32,1],
-		['baldoL',0,0,1,32],
-		['baldoR',31,0,32,32]
+		['baldoB',1,30,31,31],
+		['baldoT',1,1,31,2],
+		['baldoL',1,1,2,31],
+		['baldoR',30,1,31,31]
 	];
 	this.gotHit=function(by,at) {
 		if (villanHit(this,by,at,0.5)==false) {
@@ -231,10 +231,10 @@ var shades=function(dir) {
 		showMe(this);
 	};
 	this.hitMap=[
-		['shadesB',0,31,32,32],
-		['shadesT',0,0,32,1],
-		['shadesL',0,0,1,32],
-		['shadesR',31,0,32,32]
+		['shadesB',1,30,31,31],
+		['shadesT',1,1,31,2],
+		['shadesL',1,1,2,31],
+		['shadesR',30,1,31,31]
 	];
 	this.gotHit=function(by,at) {
 		if  (villanHit(this,by,at,0.5)==false) {
@@ -272,10 +272,10 @@ var blob=function(dir) {
 		showMe(this);
 	}
 	this.hitMap=[
-		['blobT',0,6,32,7],
-		['blobB',0,25,32,26],
-		['blobL',0,6,1,26],
-		['blobR',31,6,32,26]
+		['blobT',1,6,31,7],
+		['blobB',1,25,31,26],
+		['blobL',1,6,2,26],
+		['blobR',30,6,31,26]
 	];
 	this.gotHit=function(by) {
 		if (this.isAlive!=false) {
