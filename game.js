@@ -34,6 +34,7 @@ var mapScroll=function() {
 		for (map in rw.maps) {
 			var curMap=rw.maps[map];
 			curMap.move(this.pX,this.pY);
+			/*
 			if (curMap.active) {
 				if ((curMap.x<-640)||(curMap.x>640)||(curMap.y<-640)||(curMap.y>640)) {
 					curMap.hide();
@@ -43,6 +44,7 @@ var mapScroll=function() {
 						curMap.display();
 				};
 			};
+			*/
 		};
 		this.gX+=this.pX;
 		this.gY+=this.pY;
