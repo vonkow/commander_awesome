@@ -32,9 +32,18 @@ var mapScroll=function() {
 		this.pX=this.tX;
 		this.pY=this.tY;
 		for (map in rw.maps) {
-			rw.maps[map].move(this.pX,this.pY);
-		}
-		//rw.maps['grass'].move(this.pX,this.pY);
+			var curMap=rw.maps[map];
+			curMap.move(this.pX,this.pY);
+			if (curMap.active) {
+				if ((curMap.x<-640)||(curMap.x>640)||(curMap.y<-640)||(curMap.y>640)) {
+					curMap.hide();
+				};
+			} else {
+				if ((curMap.x>-640)&&(curMap.x<640)&&(curMap.y>-640)&&(curMap.y<640)) {
+						curMap.display();
+				};
+			};
+		};
 		this.gX+=this.pX;
 		this.gY+=this.pY;
 		this.tX=0;
