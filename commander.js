@@ -165,6 +165,10 @@ var commander = function() {
 								gameStats.hp-=10;
 								this.hit=30;
 								break;
+                            case 'sting':
+                                gameStats.hp-=20;
+                                this.hit=30;
+                                break;
 						};
 				};
 				if (gameStats.hp<=0) {

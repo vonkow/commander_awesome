@@ -70,6 +70,7 @@ var laser=function(img,move) {
 			case 'blob':
 			case 'baldo':
 			case 'shades':
+            case 'sting':
 			case 'wall':
 				this.base.hide();
 				return false;
@@ -113,6 +114,7 @@ var missle=function(dir,move) {
 			case 'baldo':
 			case 'blob':
 			case 'shades':
+            case 'sting':
 			case 'wall':
 				this.base.hide();
 				return false;

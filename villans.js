@@ -43,12 +43,12 @@ var swapAni=function(me, rate) {
 	}
 };
 
-var followCommander=function(me) {
+var followCommander=function(me,speed) {
 	// Movement
 	switch (me.dir) {
 		case 'l':
 			if (me.base.posX1()>304) {
-				me.base.move(-0.5,0);
+				me.base.move(-speed,0);
 			} else if (me.base.posY1()>304) {
 				me.dir='u';
 			} else {
@@ -57,7 +57,7 @@ var followCommander=function(me) {
 			break;
 		case 'r':
 			if (me.base.posX1()<304) {
-				me.base.move(0.5,0);
+				me.base.move(speed,0);
 			} else if (me.base.posY1()>304) {
 				me.dir='u';
 			} else {
@@ -66,7 +66,7 @@ var followCommander=function(me) {
 			break;
 		case 'd':
 			if (me.base.posY1()<304) {
-				me.base.move(0,0.5);
+				me.base.move(0,speed);
 			} else if (me.base.posX1()<304) {
 				me.dir='r';
 			} else {
@@ -75,7 +75,7 @@ var followCommander=function(me) {
 			break;
 		case 'u':
 			if (me.base.posY1()>304) {
-				me.base.move(0,-0.5);
+				me.base.move(0,-speed);
 			} else if (me.base.posX1()<304) {
 				me.dir='r';
 			} else {
@@ -179,7 +179,7 @@ var baldo=function(dir) {
 		this.hit=false;
 		if ((this.base.posX2()<560)&&(this.base.posX1()>80)) {
 			if ((this.base.posY2()<560)&&(this.base.posY1()>80)) {
-				followCommander(this);
+				followCommander(this,0.5);
 				shootCommander(this,'shot',2.5,50);
 				swapAni(this, 10);
 			};
@@ -218,7 +218,7 @@ var shades=function(dir) {
 		this.hit=false;
 		if ((this.base.posX2()<560)&&(this.base.posX1()>80)) {
 			if ((this.base.posY2()<560)&&(this.base.posY1()>80)) {
-				followCommander(this);
+				followCommander(this,0.5);
 				swapAni(this, 10);
 			};
 		};
@@ -313,3 +313,42 @@ var shot=function(img,move,countDown) {
 		};
 	};
 };
+
+
+var stingCount=0;
+var sting=function(dir){
+    this.base=new rw.ent("sting"+stingCount++,"villans/sting",dir+"1","png",32,32);
+    this.dir=dir;
+    this.ani=1;
+    this.aniCount=10;
+    this.hp=5;
+    this.hit=false;
+    this.alive=true;
+    this.update=function(){
+        this.hit=false;
+        if ((this.base.posX2()<560)&&(this.base.posX1()>80)){
+            if ((this.base.posY2()<560)&&(this.base.posY1()>80)){
+                followCommander(this,1);  
+                swapAni(this,10);
+            }
+        }
+        scrollEnt(this);
+        this.base.changeSprite(this.dir+this.ani);
+        hideMe(this);
+    }
+    this.inactive=function(){
+        scrollEnt(this);
+        showMe(this);
+    }
+	this.hitMap=[
+		['stingB',1,30,31,31],
+		['stingT',1,1,31,2],
+		['stingL',1,1,2,31],
+		['stingR',30,1,31,31]
+	];
+	this.gotHit=function(by,at) {
+		if  (villanHit(this,by,at,0.5)==false) {
+			return false;
+		};
+	};
+}	

@@ -28,6 +28,8 @@ var world2=function() {
 	.newEnt(new wall(864,32)).base.display('',240,1264).end()
 	.newEnt(new commander())
 		.base.display('d1l',304,304,304).end()
+    .newEnt(new sting('d'))
+        .base.display('d1',624,304,304).end()
 	.newEnt(new store())
 		.base.display('d',368,304).end()
 	.newEnt(new shades('u'))
