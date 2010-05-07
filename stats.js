@@ -74,6 +74,17 @@ var statRule=function() {
 }
 
 var makeStatBar=function() {
+	rw.newEnt(new function() {
+		this.base=new rw.ent('statbar','','','',640,25);
+		this.update=function() {
+			this.base.detach().attach(
+				document.createTextNode('Hp: '+gameStats.hp+' Laser: '+gameStats.weps.las+' Fire: '+gameStats.weps.fire+' Missles: '+gameStats.weps.mis+' Loot: '+gameStats.loot));
+		}
+	}).base.display('',0,615).end();
+}
+
+/*
+var makeStatBar=function() {
 	rw.newEnt(new statBar()).base.display('bar',0,576,640).end()
 	.newEnt(new statNum('hp',0)).base.display('0',32,608,641).end()
 	.newEnt(new statNum('hp',1)).base.display('0',64,608,641).end()
@@ -91,4 +102,5 @@ var makeStatBar=function() {
 	.newEnt(new statNum('loot',2)).base.display('0',576,608,641).end()
 	.newEnt(new statNum('loot',3)).base.display('0',608,608,641).end()
 }
+*/
 
