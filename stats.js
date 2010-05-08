@@ -75,7 +75,7 @@ var statRule=function() {
 
 var makeStatBar=function() {
 	rw.newEnt(new function() {
-		this.base=new rw.ent('statbar','','','',640,25);
+		this.base=new rw.ent('statbar','',' ','',640,25);
 		this.markUp=function() {
 			var div=document.createElement('div');
 			div.style.width='100%';
@@ -87,7 +87,7 @@ var makeStatBar=function() {
 		this.update=function() {
 			this.base.detach().attach(this.markUp());
 		}
-	}).base.display('',0,615).end();
+	}).base.display(' ',0,615).end();
 }
 
 /*

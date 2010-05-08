@@ -135,6 +135,7 @@ var hurtMe=function(me,by) {
 	};
 };
 
+/*
 var checkCol=function(me,by,at) {
 	var loc = at[at.length-1];
 	if ((by=='wallT')&&(loc=='B')) {
@@ -153,10 +154,37 @@ var checkCol=function(me,by,at) {
 		return hurtMe(me,by);
 	}
 };
+*/
+
+var checkCol=function(me,by) {
+	switch(by) {
+		case 'wallT':
+		case 'wallB':
+		case 'wallR':
+		case 'wallL':
+			me.base.wipeMove();
+			switch(me.dir) {
+				case 'd':
+				case 'u':
+					(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
+					break;
+				case 'r':
+				case 'l':
+					(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
+					break;
+			};
+			break;
+		default:
+			if (me.hit==false) {
+				return hurtMe(me,by);
+			};
+			break;
+	};
+};
 
 var villanHit=function(me,by,at,chance) {
 	if (me.alive!=false) {
-		me.alive=checkCol(me,by,at);
+		me.alive=checkCol(me,by);
 		if (me.alive==false) {
 			dropRandom(me,chance);
 			return false;
@@ -192,11 +220,11 @@ var baldo=function(dir) {
 		scrollEnt(this);
 		showMe(this);
 	};
-	this.hitMap=[
-		['baldoB',1,30,31,31],
-		['baldoT',1,1,31,2],
-		['baldoL',1,1,2,31],
-		['baldoR',30,1,31,31]
+	this.hitMap=[['baldo',1,1,31,31]];
+	this.canHit=[
+		'wallB','wallT','wallR','wallL',
+		'comB','comT','comR','comL',
+		'laser','fire','missle'
 	];
 	this.gotHit=function(by,at) {
 		if (villanHit(this,by,at,0.5)==false) {
@@ -230,11 +258,11 @@ var shades=function(dir) {
 		scrollEnt(this);
 		showMe(this);
 	};
-	this.hitMap=[
-		['shadesB',1,30,31,31],
-		['shadesT',1,1,31,2],
-		['shadesL',1,1,2,31],
-		['shadesR',30,1,31,31]
+	this.hitMap=[['shades',1,1,31,31]];
+	this.canHit=[
+		'wallB','wallT','wallR','wallL',
+		'comB','comT','comR','comL',
+		'laser','fire','missle'
 	];
 	this.gotHit=function(by,at) {
 		if  (villanHit(this,by,at,0.5)==false) {
@@ -271,11 +299,11 @@ var blob=function(dir) {
 		scrollEnt(this);
 		showMe(this);
 	}
-	this.hitMap=[
-		['blobT',1,6,31,7],
-		['blobB',1,25,31,26],
-		['blobL',1,6,2,26],
-		['blobR',30,6,31,26]
+	this.hitMap=[['blob',1,6,31,26]];
+	this.canHit=[
+		'wallB','wallT','wallR','wallL',
+		'comB','comT','comR','comL',
+		'laser','fire','missle'
 	];
 	this.gotHit=function(by) {
 		if (this.isAlive!=false) {
@@ -305,6 +333,10 @@ var shot=function(img,move,countDown) {
 		};
 	};
 	this.hitMap=[['shot',11,11,21,21]];
+	this.canHit=[
+		'wallB','wallT','wallR','wallL',
+		'comB','comT','comR','comL'
+	];
 	this.gotHit=function(by) {
 		by=by.slice(0,by.length-1);
 		if ((by=='com')||(by=='wall')||(by=='wall')||(by=='wall')||(by=='wall')) {
@@ -314,41 +346,41 @@ var shot=function(img,move,countDown) {
 	};
 };
 
-
 var stingCount=0;
-var sting=function(dir){
-    this.base=new rw.ent("sting"+stingCount++,"villans/sting",dir+"1","png",32,32);
-    this.dir=dir;
-    this.ani=1;
-    this.aniCount=10;
-    this.hp=5;
-    this.hit=false;
-    this.alive=true;
-    this.update=function(){
-        this.hit=false;
-        if ((this.base.posX2()<560)&&(this.base.posX1()>80)){
-            if ((this.base.posY2()<560)&&(this.base.posY1()>80)){
-                followCommander(this,1);  
-                swapAni(this,10);
-            }
-        }
-        scrollEnt(this);
-        this.base.changeSprite(this.dir+this.ani);
-        hideMe(this);
-    }
-    this.inactive=function(){
-        scrollEnt(this);
-        showMe(this);
-    }
-	this.hitMap=[
-		['stingB',1,30,31,31],
-		['stingT',1,1,31,2],
-		['stingL',1,1,2,31],
-		['stingR',30,1,31,31]
+var sting=function(dir) {
+	this.base=new rw.ent('sting'+stingCount++,'villans/sting',dir+'1','png',32,32);
+	this.dir=dir;
+	this.ani=1;
+	this.aniCount=10;
+	this.hp=5;
+	this.hit=false;
+	this.alive=true;
+	this.update=function(){
+		this.hit=false;
+		if ((this.base.posX2()<560)&&(this.base.posX1()>80)) {
+			if ((this.base.posY2()<560)&&(this.base.posY1()>80)) {
+				followCommander(this,1);
+				swapAni(this,10);
+			};
+		};
+		scrollEnt(this);
+		this.base.changeSprite(this.dir+this.ani);
+		hideMe(this);
+	};
+	this.inactive=function() {
+		scrollEnt(this);
+		showMe(this);
+	};
+	this.hitMap=[['sting',1,1,31,31]];
+	this.canHit=[
+		'wallB','wallT','wallR','wallL',
+		'comB','comT','comR','comL',
+		'laser','fire','missle'
 	];
 	this.gotHit=function(by,at) {
 		if  (villanHit(this,by,at,0.5)==false) {
 			return false;
 		};
 	};
-}	
+};
+

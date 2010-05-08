@@ -46,6 +46,7 @@ var world2=function() {
 		.base.display('l1',748,336,336).end()
 }
 /*
+	
 	.newMap('01','01','gif',1920,1920).moveTo(-336,-336).display().end()
 
 */

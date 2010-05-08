@@ -15,6 +15,11 @@ var wall=function(x,y) {
 		['wallL',0,1,1,y-1,x/2,y/2],
 		['wallR',x-1,1,x,y-1,x/2,y/2]
 	];
+	this.canHit=[
+		'comB','comT','comR','comL',
+		'shades','baldo','blob','sting',
+		'laser','missle','shot'
+	];
 }
 
 var dropRandom=function(me,chance) {
@@ -60,6 +65,9 @@ var loot=function(type) {
 		showMe(this);
 	}
 	this.hitMap=[['loot',8,8,16,16]];
+	this.canHit=[
+		'comB','comT','comR','comL'
+	];
 	this.gotHit=function(by) {
 		if (by.slice(0,by.length-1)=='com') {
 			gameStats.loot+=this.loot;
@@ -82,6 +90,9 @@ var store=function() {
 		showMe(this);
 	};
 	this.hitMap=[['store',-32,-32,64,64]];
+	this.canHit=[
+		'comB','comT','comR','comL'
+	];
 	this.gotHit=function(by) {
 		if ((by.slice(0,by.length-1)=='com')&&(rw.key('a'))) {
 			rw.rules['enterStore'].instore=true;

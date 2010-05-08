@@ -141,6 +141,15 @@ var commander = function() {
 		['comL',1,1,2,31],
 		['comR',30,1,31,31]
 	];
+	this.canHit=[
+		'wallB','wallT','wallR','wallL',
+		'baldoB','baldoT','baldoR','baldoL',
+		'shadesB','shadesT','shadesR','shadesL',
+		'blobB','blobT','blobR','blobL',
+		'stingB','stingT','stingR','stingL',
+		'store','loot',
+		'shot'
+	];
 	this.gotHit = function(by,at) {
 		if ((at=='comT')&&(by=='wallB')) {
 			rw.rules['map'].pos(0,-1);
