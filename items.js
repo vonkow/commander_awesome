@@ -10,15 +10,14 @@ var wall=function(x,y) {
 		showMe(this);
 	};
 	this.hitMap=[
-		['wallT',1,0,x-1,1,x/2,y/2],
-		['wallB',1,y-1,x-1,y,x/2,y/2],
-		['wallL',0,1,1,y-1,x/2,y/2],
-		['wallR',x-1,1,x,y-1,x/2,y/2]
-	];
-	this.canHit=[
-		'comB','comT','comR','comL',
-		'shades','baldo','blob','sting',
-		'laser','missle','shot'
+		['wall',[
+			'shades','baldo','blob','sting',
+			'laser','missle','shot'
+		],0,0,x,y],
+		['wallT',['comB'],1,0,x-1,1,x/2,y/2],
+		['wallB',['comT'],1,y-1,x-1,y,x/2,y/2],
+		['wallL',['comR'],0,1,1,y-1,x/2,y/2],
+		['wallR',['comL'],x-1,1,x,y-1,x/2,y/2]
 	];
 }
 
@@ -64,12 +63,9 @@ var loot=function(type) {
 		scrollEnt(this);
 		showMe(this);
 	}
-	this.hitMap=[['loot',8,8,16,16]];
-	this.canHit=[
-		'comB','comT','comR','comL'
-	];
+	this.hitMap=[['loot',['com'],8,8,16,16]];
 	this.gotHit=function(by) {
-		if (by.slice(0,by.length-1)=='com') {
+		if (by=='com') {
 			gameStats.loot+=this.loot;
 			this.loot=0;
 			this.base.hide();
@@ -89,12 +85,9 @@ var store=function() {
 		scrollEnt(this);
 		showMe(this);
 	};
-	this.hitMap=[['store',-32,-32,64,64]];
-	this.canHit=[
-		'comB','comT','comR','comL'
-	];
+	this.hitMap=[['store',['com'],-32,-32,64,64]];
 	this.gotHit=function(by) {
-		if ((by.slice(0,by.length-1)=='com')&&(rw.key('a'))) {
+		if ((by=='com')&&(rw.key('a'))) {
 			rw.rules['enterStore'].instore=true;
 		};
 	};

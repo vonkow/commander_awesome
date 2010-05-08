@@ -43,10 +43,7 @@ var fire=function(dir) {
 			return false;
 		}
 	};
-	this.hitMap=[['fire',0,0,32,32]];
-	this.canHit=[
-		'baldo','shades','blob','sting'
-	];
+	this.hitMap=[['fire',['baldo','shades','blob','sting'],0,0,32,32]];
 }
 
 
@@ -65,11 +62,10 @@ var laser=function(img,move) {
 			return false;
 		};
 	};
-	this.hitMap=[['laser',11,11,21,21]];
-	this.canHit=[
-		'wallB','wallT','wallR','wallL',
+	this.hitMap=[['laser',[
+		'wall',
 		'baldo','shades','blob','sting'
-	];
+	],11,11,21,21]];
 	this.gotHit=function(by) {
 		switch (by) {
 			case 'blob':
@@ -115,11 +111,10 @@ var missle=function(dir,move) {
 			return false;
 		};
 	};
-	this.hitMap=[['missle',8,8,16,16]];
-	this.canHit=[
-		'wallB','wallT','wallR','wallL',
+	this.hitMap=[['missle',[
+		'wall',
 		'baldo','shades','blob','sting'
-	];
+	],8,8,16,16]];
 	this.gotHit=function(by) {
 		switch (by) {
 			case 'baldo':
@@ -136,4 +131,3 @@ var missle=function(dir,move) {
 		}
 	}
 };
-

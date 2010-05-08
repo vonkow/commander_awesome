@@ -136,19 +136,20 @@ var commander = function() {
 		rw.key('ua') ? this.dir='u' : this.dir=this.dir;
 	};
 	this.hitMap = [
-		['comT',1,1,31,2],
-		['comB',1,30,31,31],
-		['comL',1,1,2,31],
-		['comR',30,1,31,31]
+		['com',[
+			'baldoB','baldoT','baldoR','baldoL',
+			'shadesB','shadesT','shadesR','shadesL',
+			'blobB','blobT','blobR','blobL',
+			'stingB','stingT','stingR','stingL',
+			'store','loot',
+			'shot'
+		],1,1,31,31],
+		['comT',['wallB'],1,1,31,2],
+		['comB',['wallT'],1,30,31,31],
+		['comL',['wallR'],1,1,2,31],
+		['comR',['wallL'],30,1,31,31]
 	];
 	this.canHit=[
-		'wallB','wallT','wallR','wallL',
-		'baldoB','baldoT','baldoR','baldoL',
-		'shadesB','shadesT','shadesR','shadesL',
-		'blobB','blobT','blobR','blobL',
-		'stingB','stingT','stingR','stingL',
-		'store','loot',
-		'shot'
 	];
 	this.gotHit = function(by,at) {
 		if ((at=='comT')&&(by=='wallB')) {

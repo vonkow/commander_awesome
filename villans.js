@@ -135,50 +135,18 @@ var hurtMe=function(me,by) {
 	};
 };
 
-/*
-var checkCol=function(me,by,at) {
-	var loc = at[at.length-1];
-	if ((by=='wallT')&&(loc=='B')) {
-		me.base.wipeMove();
-		(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
-	} else if ((by=='wallB')&&(loc=='T')) {
-		me.base.wipeMove();
-		(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
-	} else if ((by=='wallR')&&(loc=='L')) {
-		me.base.wipeMove();
-		(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
-	} else if ((by=='wallL')&&(loc=='R')) {
-		me.base.wipeMove();
-		(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
-	} else if (me.hit==false){
-		return hurtMe(me,by);
-	}
-};
-*/
-
 var checkCol=function(me,by) {
-	switch(by) {
-		case 'wallT':
-		case 'wallB':
-		case 'wallR':
-		case 'wallL':
-			me.base.wipeMove();
-			switch(me.dir) {
-				case 'd':
-				case 'u':
-					(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
-					break;
-				case 'r':
-				case 'l':
-					(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
-					break;
-			};
-			break;
-		default:
-			if (me.hit==false) {
-				return hurtMe(me,by);
-			};
-			break;
+	if (by=='wall') {
+		me.base.wipeMove();
+		if ((me.dir=='d')||(me.dir=='u')) {
+			(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
+		} else {
+			(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
+		};
+	} else {
+		if (me.hit==false) {
+			return hurtMe(me,by);
+		};
 	};
 };
 
@@ -220,12 +188,10 @@ var baldo=function(dir) {
 		scrollEnt(this);
 		showMe(this);
 	};
-	this.hitMap=[['baldo',1,1,31,31]];
-	this.canHit=[
-		'wallB','wallT','wallR','wallL',
-		'comB','comT','comR','comL',
+	this.hitMap=[['baldo',[
+		'wall','com',
 		'laser','fire','missle'
-	];
+	],1,1,31,31]];
 	this.gotHit=function(by,at) {
 		if (villanHit(this,by,at,0.5)==false) {
 			return false;
@@ -258,12 +224,10 @@ var shades=function(dir) {
 		scrollEnt(this);
 		showMe(this);
 	};
-	this.hitMap=[['shades',1,1,31,31]];
-	this.canHit=[
-		'wallB','wallT','wallR','wallL',
-		'comB','comT','comR','comL',
+	this.hitMap=[['shades',[
+		'wall','com',
 		'laser','fire','missle'
-	];
+	],1,1,31,31]];
 	this.gotHit=function(by,at) {
 		if  (villanHit(this,by,at,0.5)==false) {
 			return false;
@@ -299,12 +263,10 @@ var blob=function(dir) {
 		scrollEnt(this);
 		showMe(this);
 	}
-	this.hitMap=[['blob',1,6,31,26]];
-	this.canHit=[
-		'wallB','wallT','wallR','wallL',
-		'comB','comT','comR','comL',
+	this.hitMap=[['blob',[
+		'wall','com',
 		'laser','fire','missle'
-	];
+	],1,6,31,26]];
 	this.gotHit=function(by) {
 		if (this.isAlive!=false) {
 			this.isAlive=hurtMe(this,by);
@@ -332,14 +294,9 @@ var shot=function(img,move,countDown) {
 			return false;
 		};
 	};
-	this.hitMap=[['shot',11,11,21,21]];
-	this.canHit=[
-		'wallB','wallT','wallR','wallL',
-		'comB','comT','comR','comL'
-	];
+	this.hitMap=[['shot',['wall','com'],11,11,21,21]];
 	this.gotHit=function(by) {
-		by=by.slice(0,by.length-1);
-		if ((by=='com')||(by=='wall')||(by=='wall')||(by=='wall')||(by=='wall')) {
+		if ((by=='com')||(by=='wall')) {
 			this.base.hide();
 			return false;
 		};
@@ -371,16 +328,13 @@ var sting=function(dir) {
 		scrollEnt(this);
 		showMe(this);
 	};
-	this.hitMap=[['sting',1,1,31,31]];
-	this.canHit=[
-		'wallB','wallT','wallR','wallL',
-		'comB','comT','comR','comL',
+	this.hitMap=[['sting',[
+		'wall','com',
 		'laser','fire','missle'
-	];
+	],1,1,31,31]];
 	this.gotHit=function(by,at) {
 		if  (villanHit(this,by,at,0.5)==false) {
 			return false;
 		};
 	};
 };
-
