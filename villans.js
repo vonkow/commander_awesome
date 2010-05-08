@@ -138,16 +138,16 @@ var hurtMe=function(me,by) {
 var checkCol=function(me,by,at) {
 	var loc = at[at.length-1];
 	if ((by=='wallT')&&(loc=='B')) {
-		me.base.move(0,-2);
+		me.base.wipeMove();
 		(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
 	} else if ((by=='wallB')&&(loc=='T')) {
-		me.base.move(0,2);
+		me.base.wipeMove();
 		(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
 	} else if ((by=='wallR')&&(loc=='L')) {
-		me.base.move(2,0);
+		me.base.wipeMove();
 		(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
 	} else if ((by=='wallL')&&(loc=='R')) {
-		me.base.move(-2,0);
+		me.base.wipeMove();
 		(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
 	} else if (me.hit==false){
 		return hurtMe(me,by);
