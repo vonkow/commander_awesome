@@ -137,19 +137,14 @@ var commander = function() {
 	};
 	this.hitMap = [
 		['com',[
-			'baldoB','baldoT','baldoR','baldoL',
-			'shadesB','shadesT','shadesR','shadesL',
-			'blobB','blobT','blobR','blobL',
-			'stingB','stingT','stingR','stingL',
-			'store','loot',
-			'shot'
+			'baldo','shades','blob','sting',
+			'shot',
+			'store','loot'
 		],1,1,31,31],
 		['comT',['wallB'],1,1,31,2],
 		['comB',['wallT'],1,30,31,31],
 		['comL',['wallR'],1,1,2,31],
 		['comR',['wallL'],30,1,31,31]
-	];
-	this.canHit=[
 	];
 	this.gotHit = function(by,at) {
 		if ((at=='comT')&&(by=='wallB')) {
@@ -167,19 +162,16 @@ var commander = function() {
 						gameStats.hp-=10;
 						this.hit=30;
 						break;
-					default:
-						switch(by.slice(0,by.length-1)) {
-							case 'blob':
-							case 'baldo':
-							case 'shades':
-								gameStats.hp-=10;
-								this.hit=30;
-								break;
-                            case 'sting':
-                                gameStats.hp-=20;
-                                this.hit=30;
-                                break;
-						};
+					case 'blob':
+					case 'baldo':
+					case 'shades':
+						gameStats.hp-=10;
+						this.hit=30;
+						break;
+					case 'sting':
+						gameStats.hp-=20;
+						this.hit=30;
+						break;
 				};
 				if (gameStats.hp<=0) {
 					this.base.hide();
