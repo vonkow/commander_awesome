@@ -77,6 +77,6 @@ var startGame=function() {
 	.using('villans/sting','png',['u1','u2','d1','d2','l1','l2','r1','r2'])
 	.setFPS(60)
 	.newEnt(new lagTimer()).base.display('blank',0,0,0).end()
-	.func(world2())
+	.func(world01())
 	.start();
 };
