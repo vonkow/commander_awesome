@@ -164,7 +164,7 @@ var villanHit=function(me,by,at,chance) {
 // Villans
 var baldoCount=0;
 var baldo=function(dir) {
-	this.base=new rw.ent('baldo'+baldoCount++,'villans/baldo',dir+'1','png',32,32);
+	this.base=rw.ent('baldo'+baldoCount++,'villans/baldo',dir+'1','png',32,32);
 	this.dir=dir;
 	this.aniCount=10;
 	this.ani=1;
@@ -201,7 +201,7 @@ var baldo=function(dir) {
 
 var shadesCount=0;
 var shades=function(dir) {
-	this.base=new rw.ent('shades'+shadesCount++,'villans/shades',dir+'1','png',32,32);
+	this.base=rw.ent('shades'+shadesCount++,'villans/shades',dir+'1','png',32,32);
 	this.dir=dir;
 	this.ani=1;
 	this.aniCount=10;
@@ -237,7 +237,7 @@ var shades=function(dir) {
 
 var blobCount=0;
 var blob=function(dir) {
-	this.base=new rw.ent('blob'+blobCount++,'villans/blob',dir+'1','png',32,32);
+	this.base=rw.ent('blob'+blobCount++,'villans/blob',dir+'1','png',32,32);
 	this.dir=dir;
 	this.counter=0;
 	this.ani=1;
@@ -281,7 +281,7 @@ var blob=function(dir) {
 
 var shotCount=0;
 var shot=function(img,move,countDown) {
-	this.base=new rw.ent('shot'+shotCount++,'weapons/shot',img,'png',32,32);
+	this.base=rw.ent('shot'+shotCount++,'weapons/shot',img,'png',32,32);
 	this.move=move;
 	this.countDown = countDown;
 	this.update=function() {
@@ -305,7 +305,7 @@ var shot=function(img,move,countDown) {
 
 var stingCount=0;
 var sting=function(dir) {
-	this.base=new rw.ent('sting'+stingCount++,'villans/sting',dir+'1','png',32,32);
+	this.base=rw.ent('sting'+stingCount++,'villans/sting',dir+'1','png',32,32);
 	this.dir=dir;
 	this.ani=1;
 	this.aniCount=10;

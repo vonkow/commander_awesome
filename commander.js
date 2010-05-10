@@ -1,5 +1,5 @@
 var commander = function() {
-	this.base = new rw.ent('commander', 'commander', 'd1l', 'png', 32, 32);
+	this.base = rw.ent('commander', 'commander', 'd1l', 'png', 32, 32);
 	this.stats = {
 		walk:1
 	};

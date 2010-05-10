@@ -7,7 +7,7 @@ var fireRule=function() {
 
 var fireCount=0;
 var fire=function(dir) {
-	this.base=new rw.ent('fire'+fireCount++,'weapons/fire',dir,'png',32,32);
+	this.base=rw.ent('fire'+fireCount++,'weapons/fire',dir,'png',32,32);
 	this.update=function() {
 		if (rw.key('da')) {
 			if (rw.key('la')) {
@@ -49,7 +49,7 @@ var fire=function(dir) {
 
 var lasCount=0;
 var laser=function(img,move) {
-	this.base=new rw.ent('laser'+lasCount++,'weapons/laser',img,'png',32,32);
+	this.base=rw.ent('laser'+lasCount++,'weapons/laser',img,'png',32,32);
 	this.move=move;
 	this.countDown = 50;
 	this.update=function() {
@@ -85,7 +85,7 @@ var laser=function(img,move) {
 
 var missleCount=0;
 var missle=function(dir,move) {
-	this.base=new rw.ent('missle'+missleCount++,'weapons/missle',dir+'1','png',32,32);
+	this.base=rw.ent('missle'+missleCount++,'weapons/missle',dir+'1','png',32,32);
 	this.dir=dir;
 	this.move=[move[0]*0.5,move[1]*0.5];
 	this.countDown=150;

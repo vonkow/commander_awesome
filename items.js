@@ -1,6 +1,6 @@
 var wallCount=0;
 var wall=function(x,y) {
-	this.base=new rw.ent('wall'+wallCount++,'','','',x,y);
+	this.base=rw.ent('wall'+wallCount++,'','','',x,y);
 	this.update=function(){
 		scrollEnt(this);
 		hideMe(this);
@@ -46,7 +46,7 @@ var loot=function(type) {
 			var value=250;
 			break;
 	};
-	this.base=new rw.ent('loot'+lootCounter++,'items/loot',lootType,'png',32,32);
+	this.base=rw.ent('loot'+lootCounter++,'items/loot',lootType,'png',32,32);
 	this.counter=0;
 	this.loot=value;
 	this.update=function() {
@@ -76,7 +76,7 @@ var loot=function(type) {
 
 var storeCounter=0;
 var store=function() {
-	this.base=new rw.ent('store'+storeCounter++,'store','d','png',32,32);
+	this.base=rw.ent('store'+storeCounter++,'store','d','png',32,32);
 	this.update=function() {
 		scrollEnt(this);
 		hideMe(this);

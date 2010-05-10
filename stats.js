@@ -1,5 +1,5 @@
 var lagTimer = function() {
-	this.base = new rw.ent('lag', '','','',150,20);
+	this.base = rw.ent('lag', '','','',150,20);
 	this.update = function() {
 		this.base.detach();
 		this.base.attach(document.createTextNode('Lag: '+rw.getLag()+'(ms)'));
@@ -7,13 +7,13 @@ var lagTimer = function() {
 }
 
 var statBar=function() {
-	this.base=new rw.ent('statbar','bar','bar','png',640,64);
+	this.base=rw.ent('statbar','bar','bar','png',640,64);
 	this.update=function(){};
 }
 
 var statNumCount=0;
 var statNum=function(stat,pos) {
-	this.base=new rw.ent('statNum'+statNumCount++,'font','0','png',32,32);
+	this.base=rw.ent('statNum'+statNumCount++,'font','0','png',32,32);
 	this.stat=stat;
 	this.pos=pos;
 	this.update=function() {
@@ -75,7 +75,7 @@ var statRule=function() {
 
 var makeStatBar=function() {
 	rw.newEnt(new function() {
-		this.base=new rw.ent('statbar','',' ','',640,25);
+		this.base=rw.ent('statbar','',' ','',640,25);
 		this.markUp=function() {
 			var div=document.createElement('div');
 			div.style.width='100%';
