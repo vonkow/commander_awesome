@@ -43,13 +43,13 @@ var tryBuy=function(item) {
 };
 
 var storeIn=function() {
-	this.base=new rw.ent('storeIn','store','inside','png',640,640);
+	this.base=rw.ent('storeIn','store','inside','png',640,640);
 	this.update=function() {
 	};
 };
 
 var storeArrow=function() {
-	this.base=new rw.ent('storeArrow','font','raro','png',32,32);
+	this.base=rw.ent('storeArrow','font','raro','png',32,32);
 	this.pos=0;
 	this.keyDelay=0;
 	this.update=function() {
@@ -88,7 +88,7 @@ var storeArrow=function() {
 
 var storeQtyCount=0;
 var storeQty=function(type,ord) {
-	this.base=new rw.ent('storeQty'+storeQtyCount++,'font','0','png',32,32);
+	this.base=rw.ent('storeQty'+storeQtyCount++,'font','0','png',32,32);
 	this.type=type;
 	this.ord=ord;
 	this.update=function() {
