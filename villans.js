@@ -43,12 +43,12 @@ var swapAni=function(me, rate) {
 	}
 };
 
-var followCommander=function(me,speed) {
+var followCommander=function(me) {
 	// Movement
 	switch (me.dir) {
 		case 'l':
 			if (me.base.posX1()>304) {
-				me.base.move(-speed,0);
+				me.base.move(-me.speed,0);
 			} else if (me.base.posY1()>304) {
 				me.dir='u';
 			} else {
@@ -57,7 +57,7 @@ var followCommander=function(me,speed) {
 			break;
 		case 'r':
 			if (me.base.posX1()<304) {
-				me.base.move(speed,0);
+				me.base.move(me.speed,0);
 			} else if (me.base.posY1()>304) {
 				me.dir='u';
 			} else {
@@ -66,7 +66,7 @@ var followCommander=function(me,speed) {
 			break;
 		case 'd':
 			if (me.base.posY1()<304) {
-				me.base.move(0,speed);
+				me.base.move(0,me.speed);
 			} else if (me.base.posX1()<304) {
 				me.dir='r';
 			} else {
@@ -75,7 +75,7 @@ var followCommander=function(me,speed) {
 			break;
 		case 'u':
 			if (me.base.posY1()>304) {
-				me.base.move(0,-speed);
+				me.base.move(0,-me.speed);
 			} else if (me.base.posX1()<304) {
 				me.dir='r';
 			} else {
@@ -137,10 +137,19 @@ var hurtMe=function(me,by) {
 
 var checkCol=function(me,by) {
 	if (by=='wall') {
-		me.base.wipeMove();
-		if ((me.dir=='d')||(me.dir=='u')) {
+		//me.base.wipeMove();
+
+		if (me.dir=='d') {
+			me.base.move(0,-me.speed);
 			(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
+		} else if (me.dir=='u') {
+			me.base.move(0,me.speed);
+			(me.base.posX1()<304) ? me.dir='r' : me.dir='l';
+		} else if(me.dir=='l') {
+			me.base.move(me.speed,0);
+			(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
 		} else {
+			me.base.move(-me.speed,0);
 			(me.base.posY1()<304) ? me.dir='d' : me.dir='u';
 		};
 	} else {
@@ -171,11 +180,12 @@ var baldo=function(dir) {
 	this.hp=5;
 	this.wepCount=0;
 	this.hit=false;
+	this.speed=0.5;
 	this.update=function() {
 		this.hit=false;
 		if ((this.base.posX2()<560)&&(this.base.posX1()>80)) {
 			if ((this.base.posY2()<560)&&(this.base.posY1()>80)) {
-				followCommander(this,0.5);
+				followCommander(this);
 				shootCommander(this,'shot',2.5,50);
 				swapAni(this, 10);
 			};
@@ -208,15 +218,16 @@ var shades=function(dir) {
 	this.hp=3;
 	this.hit=false;
 	this.alive=true;
+	this.speed=0.5;
 	this.update=function(){
 		this.hit=false;
+		scrollEnt(this);
 		if ((this.base.posX2()<560)&&(this.base.posX1()>80)) {
 			if ((this.base.posY2()<560)&&(this.base.posY1()>80)) {
-				followCommander(this,0.5);
+				followCommander(this);
 				swapAni(this, 10);
 			};
 		};
-		scrollEnt(this);
 		this.base.changeSprite(this.dir+this.ani);
 		hideMe(this);
 	};
@@ -245,6 +256,7 @@ var blob=function(dir) {
 	this.hit=false;
 	this.hp=3;
 	this.isAlive=true;
+	this.speed=0.5;
 	this.update=function() {
 		this.hit=false;
 		if (this.counter<100) {
@@ -312,11 +324,12 @@ var sting=function(dir) {
 	this.hp=5;
 	this.hit=false;
 	this.alive=true;
+	this.speed=1;
 	this.update=function(){
 		this.hit=false;
 		if ((this.base.posX2()<560)&&(this.base.posX1()>80)) {
 			if ((this.base.posY2()<560)&&(this.base.posY1()>80)) {
-				followCommander(this,1);
+				followCommander(this);
 				swapAni(this,10);
 			};
 		};
